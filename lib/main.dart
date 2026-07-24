@@ -134,64 +134,81 @@ class _BerandaTelegramState extends State<BerandaTelegram> {
       ),
 
       body: _halaman[_selectedIndex],
-      
-      // Menggeser tombol pensil agar tidak tertutup navbar yang membesar
-      // Menggeser tombol pensil lebih ke atas agar tidak tertabrak navbar
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: 95.0), // Padding bawah dinaikkan jadi 95
-        child: _selectedIndex == 0 ? FloatingActionButton(
-          backgroundColor: Color(0xFF5288C1),
-          child: Icon(Icons.edit, color: Colors.white),
-          onPressed: () {},
-        ) : null,
-      ),
 
       // ==========================================
-      // ROUNDED NAVBAR DENGAN GRADASI OPACITY
+      // TOMBOL BUAT CHAT BARU (UKURAN BISA DIATUR)
+      // ==========================================
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: _selectedIndex == 0 
+        ? Transform.translate(
+            offset: Offset(0, 40), 
+            // Bungkus dengan SizedBox untuk mengatur ukuran tombol
+            child: SizedBox(
+              width: 50, // <-- Ubah angka ini untuk lebar tombol
+              height: 50, // <-- Ubah angka ini untuk tinggi tombol
+              child: FloatingActionButton(
+                backgroundColor: Color(0xFF5288C1),
+                shape: CircleBorder(), 
+                // Ukuran ikon sedikit dikecilkan biar pas dengan tombol baru
+                child: Icon(Icons.add_comment, color: Colors.white, size: 22), 
+                onPressed: () {
+                  // TODO: Fungsi memunculkan kontak
+                },
+              ),
+            ),
+          ) 
+        : null,
+
+      // ==========================================
+      // ROUNDED NAVBAR (DIKETATIN KE TENGAH)
       // ==========================================
       bottomNavigationBar: Container(
-        // Memberikan tinggi fix pada area gradasi agar bayangannya lebih panjang ke atas
-        height: 130, 
-        alignment: Alignment.bottomCenter,
+        // Kiri dan kanan diberi jarak 45 agar kapsul tertekan rapat ke tengah
+        padding: EdgeInsets.only(left: 45, right: 45, bottom: 35, top: 40),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
             colors: [
-              Color(0xFF1D2733).withOpacity(0.0), 
+              Color(0xFF1D2733).withOpacity(1.0), // Bawah gelap solid
               Color(0xFF1D2733).withOpacity(0.8), 
-              Color(0xFF1D2733), // Bagian paling bawah solid agar rapi
+              Color(0xFF1D2733).withOpacity(0.0), // Atas transparan
             ],
           ),
         ),
-        // bottom diubah jadi 40 biar navbar naik
-        padding: EdgeInsets.only(left: 20, right: 20, bottom: 40),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(30),
-          child: BottomNavigationBar(
-            backgroundColor: Color(0xFF242F3D), 
-            type: BottomNavigationBarType.fixed, 
-            currentIndex: _selectedIndex, 
-            selectedItemColor: Color(0xFF5288C1), 
-            unselectedItemColor: Colors.grey[500], 
-            
-            // --- DUA BARIS INI KUNCI BIAR KAPSULNYA RAPAT ---
-            showSelectedLabels: false, 
-            showUnselectedLabels: false, 
-            // ------------------------------------------------
-            
-            onTap: (index) {
-              setState(() {
-                _selectedIndex = index; 
-              });
-            },
-            items: [
-              BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_rounded), label: "Chats"),
-              BottomNavigationBarItem(icon: Icon(Icons.contacts_rounded), label: "Contacts"),
-              BottomNavigationBarItem(icon: Icon(Icons.settings_rounded), label: "Settings"),
-              BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: "Profile"),
-            ],
+          // Lengkungan dibikin makin bulat biar cantik saat kapsul memendek
+          borderRadius: BorderRadius.circular(35), 
+          child: SizedBox(
+            height: 60, // Tinggi sedikit dirampingkan
+            child: MediaQuery.removePadding(
+              context: context,
+              removeBottom: true, 
+              child: BottomNavigationBar(
+                backgroundColor: Color(0xFF242F3D), 
+                type: BottomNavigationBarType.fixed, 
+                currentIndex: _selectedIndex, 
+                selectedItemColor: Color(0xFF5288C1), 
+                unselectedItemColor: Colors.grey[500], 
+                showSelectedLabels: true, 
+                showUnselectedLabels: true, 
+                // Ukuran teks dan ikon sedikit dikecilkan biar muat di kapsul yang ketat
+                selectedFontSize: 10, 
+                unselectedFontSize: 10, 
+                elevation: 0, 
+                onTap: (index) {
+                  setState(() {
+                    _selectedIndex = index; 
+                  });
+                },
+                items: [
+                  BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_rounded, size: 22), label: "Chats"),
+                  BottomNavigationBarItem(icon: Icon(Icons.contacts_rounded, size: 22), label: "Contacts"),
+                  BottomNavigationBarItem(icon: Icon(Icons.settings_rounded, size: 22), label: "Settings"),
+                  BottomNavigationBarItem(icon: Icon(Icons.person_rounded, size: 22), label: "Profile"),
+                ],
+              ),
+            ),
           ),
         ),
       ),
